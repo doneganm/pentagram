@@ -1,4 +1,5 @@
 {
   "name": "Powerflow Pentagram",
-  "render_readme": true
+  "render_readme": true,
+  "filename": "pentagram-card.js"
 }

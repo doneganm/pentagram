@@ -8,8 +8,9 @@ A mystic animated energy-flow card for Home Assistant dashboards. Solar, battery
 
 ### HACS (recommended)
 
-1. HACS → Frontend → ⋮ → Custom repositories → add this repo URL as type **Dashboard**.
+1. HACS → Frontend → ⋮ → Custom repositories → add this repo URL as type **Lovelace**.
 2. Install **Powerflow Pentagram**, then hard-refresh the browser (HACS versions the resource URL, so updates re-fetch automatically).
+3. If this is a fresh publish, create a GitHub **Release** first (e.g. tag `v1.0.0`) — HACS installs versions from releases, and a repo with no releases has nothing to download.
 
 ### Manual
 
