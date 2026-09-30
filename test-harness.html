@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pentagram Card — test harness (dev only)</title>
+<style>body{background:#111;margin:0 auto;max-width:1200px;padding:16px;} h2{color:#888;font-family:monospace;}</style>
+<script type="module" src="./pentagram-card.js"></script>
+</head>
+<body>
+<h2>day / export scenario</h2>
+<pentagram-card id="day"></pentagram-card>
+<h2>night / import scenario (peak, red flames expected)</h2>
+<pentagram-card id="night"></pentagram-card>
+<script type="module">
+  const S = (state, unit) => ({ state: String(state), attributes: unit ? { unit_of_measurement: unit } : {} });
+  const dayStates = {
+    'sensor.demo_solar': S(4500, 'W'), 'sensor.demo_batsoc': S(75, '%'),
+    'sensor.demo_batkwh': S(9.5, 'kWh'), 'sensor.demo_batchgw': S(2500, 'W'),
+    'sensor.demo_s2b': S(2500, 'W'), 'sensor.demo_s2h': S(1200, 'W'),
+    'sensor.demo_s2g': S(800, 'W'), 'sensor.demo_b2h': S(0, 'W'),
+    'sensor.demo_b2g': S(0, 'W'), 'sensor.demo_gridimp': S(0, 'W'),
+    'sensor.demo_carsoc': S(45, '%'),
+    'binary_sensor.demo_carcharging': S('off'), 'binary_sensor.demo_carcharger': S('off'),
+    'sensor.demo_carchgpow': S(0, 'kW'), 'sensor.demo_carintemp': S(21.2, '°C'),
+    'sensor.demo_carrange': S(190, 'mi'),
+    'sensor.demo_housetemp': S(24.0, '°C'), 'sensor.demo_househum': S(46.4, '%'),
+    'sensor.demo_outtemp': S(18.9, '°C'), 'sensor.demo_pool': S(18.9, '°C'),
+    'sensor.demo_dhw': S(24.0, '°C'),
+    'sensor.demo_expe': S(5.2, 'kWh'), 'sensor.demo_exprate': S(0.15, 'GBP/kWh'),
+    'sensor.demo_currate': S(0.12, 'GBP/kWh'), 'sensor.demo_impcost': S(2.50, 'GBP'),
+    'sensor.demo_shift': S('P'),
+  };
+  const nightStates = {
+    'sensor.demo_solar': S(0, 'W'), 'sensor.demo_batsoc': S(60, '%'),
+    'sensor.demo_batkwh': S(7.0, 'kWh'), 'sensor.demo_batchgw': S(0, 'W'),
+    'sensor.demo_s2b': S(0, 'W'), 'sensor.demo_s2h': S(0, 'W'),
+    'sensor.demo_s2g': S(0, 'W'), 'sensor.demo_b2h': S(900, 'W'),
+    'sensor.demo_b2g': S(0, 'W'), 'sensor.demo_gridimp': S(1500, 'W'),
+    'sensor.demo_carsoc': S(45, '%'),
+    'binary_sensor.demo_carcharging': S('off'), 'binary_sensor.demo_carcharger': S('off'),
+    'sensor.demo_carchgpow': S(0, 'kW'), 'sensor.demo_carintemp': S(21.2, '°C'),
+    'sensor.demo_carrange': S(190, 'mi'),
+    'sensor.demo_housetemp': S(24.0, '°C'), 'sensor.demo_househum': S(46.4, '%'),
+    'sensor.demo_outtemp': S(18.9, '°C'), 'sensor.demo_pool': S(18.9, '°C'),
+    'sensor.demo_dhw': S(24.0, '°C'),
+    'sensor.demo_expe': S(0.4, 'kWh'), 'sensor.demo_exprate': S(0.15, 'GBP/kWh'),
+    'sensor.demo_currate': S(0.30, 'GBP/kWh'), 'sensor.demo_impcost': S(1.10, 'GBP'),
+    'sensor.demo_shift': S('P'),
+  };
+  const cfg = {
+    type: 'custom:pentagram-card',
+    solar: 'sensor.demo_solar', batSoc: 'sensor.demo_batsoc', batKwh: 'sensor.demo_batkwh',
+    batChargeW: 'sensor.demo_batchgw', s2b: 'sensor.demo_s2b', s2h: 'sensor.demo_s2h',
+    s2g: 'sensor.demo_s2g', b2h: 'sensor.demo_b2h', b2g: 'sensor.demo_b2g',
+    gridImp: 'sensor.demo_gridimp', carSoc: 'sensor.demo_carsoc',
+    carCharging: 'binary_sensor.demo_carcharging', carCharger: 'binary_sensor.demo_carcharger',
+    carChargerPower: 'sensor.demo_carchgpow', carInTemp: 'sensor.demo_carintemp',
+    carRange: 'sensor.demo_carrange', houseTemp: 'sensor.demo_housetemp',
+    houseHum: 'sensor.demo_househum', houseOutTemp: 'sensor.demo_outtemp',
+    poolTemp: 'sensor.demo_pool', dhwTemp: 'sensor.demo_dhw',
+    exportEnergyToday: 'sensor.demo_expe', exportRate: 'sensor.demo_exprate',
+    currentRate: 'sensor.demo_currate', importCost: 'sensor.demo_impcost',
+    carShiftState: 'sensor.demo_shift',
+  };
+  window.addEventListener('load', () => {
+    const day = document.getElementById('day');
+    const night = document.getElementById('night');
+    day.setConfig({ ...cfg });
+    night.setConfig({ ...cfg });
+    day.hass = { states: dayStates };
+    night.hass = { states: nightStates };
+    // live-update probe: flip day solar after 1s to prove hass-setter updates
+    setTimeout(() => {
+      day.hass = { states: { ...dayStates, 'sensor.demo_solar': S(4600, 'W') } };
+    }, 1000);
+  });
+</script>
+</body>
+</html>
